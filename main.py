@@ -45,6 +45,10 @@ def compute_metrics_middle_fn(eval_pred):
     return compute_metrics_fn(decoded_preds, decoded_labels)
 
 
+def preprocess_logits_for_metrics(logits, labels):
+    return logits.argmax(dim=-1)
+
+
 # Create the trainer
 trainer = Seq2SeqTrainer(
     model=model,
@@ -54,6 +58,7 @@ trainer = Seq2SeqTrainer(
     data_collator=data_collator,
     tokenizer=tokenizer,
     compute_metrics=compute_metrics_middle_fn,
+    preprocess_logits_for_metrics=preprocess_logits_for_metrics
 )
 
 # Start training
