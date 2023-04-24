@@ -16,9 +16,9 @@ model = AutoModelForSeq2SeqLM.from_pretrained("voidful/long-t5-encodec-tglobal-b
 
 training_args = Seq2SeqTrainingArguments(
     output_dir="./training_output",
-    num_train_epochs=3,
-    per_device_train_batch_size=6,
-    per_device_eval_batch_size=6,
+    num_train_epochs=50,
+    per_device_train_batch_size=10,
+    per_device_eval_batch_size=10,
     warmup_steps=500,
     weight_decay=0.01,
     logging_dir="./logs",
@@ -27,9 +27,9 @@ training_args = Seq2SeqTrainingArguments(
     save_strategy="epoch",
     save_total_limit=10,
     predict_with_generate=True,
-    learning_rate=5e-5,
+    learning_rate=5e-4,
     fp16=False,
-    gradient_accumulation_steps=2,
+    gradient_accumulation_steps=4,
 )
 # Define a data collator to handle tokenization
 data_collator = DataCollatorForSeq2Seq(tokenizer, model=model)
