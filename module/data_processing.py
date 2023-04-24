@@ -16,7 +16,7 @@ def get_train_valid_dataset(training_args, tokenizer, model_config):
         answer_texts = [i["text"][0] for i in batch["answers"]]
         labels = tokenizer(answer_texts, padding=True, truncation=True, add_special_tokens=False,
                            return_tensors="pt").input_ids
-
+        labels = [[-100 if token_id == tokenizer.pad_token_id else token_id for token_id in seq] for seq in labels]
         return {
             "input_ids": input_ids,
             "attention_mask": attention_mask,
