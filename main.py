@@ -11,11 +11,11 @@ from module.data_processing import get_train_valid_dataset
 from module.eval_metric import compute_metrics_fn
 
 # Load model and tokenizer and Set training parameters
-# tokenizer = AutoTokenizer.from_pretrained("voidful/long-t5-encodec-tglobal-base")
-# model = AutoModelForSeq2SeqLM.from_pretrained("voidful/long-t5-encodec-tglobal-base")
+tokenizer = AutoTokenizer.from_pretrained("voidful/long-t5-encodec-tglobal-base")
+model = AutoModelForSeq2SeqLM.from_pretrained("voidful/long-t5-encodec-tglobal-base")
 
-tokenizer = AutoTokenizer.from_pretrained("./training_output/Hubert/checkpoint-218990")
-model = AutoModelForSeq2SeqLM.from_pretrained("./training_output/Hubert/checkpoint-218990")
+# tokenizer = AutoTokenizer.from_pretrained("./Hubert/checkpoint-218990")
+# model = AutoModelForSeq2SeqLM.from_pretrained("./Hubert/checkpoint-218990")
 
 training_args = Seq2SeqTrainingArguments(
     output_dir="./training_output/Hubert",
@@ -28,7 +28,7 @@ training_args = Seq2SeqTrainingArguments(
     logging_steps=10,
     evaluation_strategy="epoch",
     save_strategy="epoch",
-    save_total_limit=3,
+    save_total_limit=5,
     predict_with_generate=True,
     learning_rate=5e-5,
     bf16=True,

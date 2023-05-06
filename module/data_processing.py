@@ -4,7 +4,6 @@ def get_train_valid_dataset(training_args, tokenizer, model_config):
     dataset = load_dataset("voidful/NMSQA-CODE")
     train_dataset = dataset['train']
     valid_dataset = dataset['dev']
-    # valid_dataset = dataset['validation']
 
     # Define function to process data into model inputs
     def process_data_to_model_inputs(batch):
@@ -16,22 +15,9 @@ def get_train_valid_dataset(training_args, tokenizer, model_config):
         attention_mask = inputs["attention_mask"]
 
         # Tokenize answers and create labels
-        # answer_texts = [i["text"][0] for i in batch["answers"]]
         labels = tokenizer(v_tok_a, padding=True, truncation=True, return_tensors="pt").input_ids
         labels = [[-100 if token_id == tokenizer.pad_token_id else token_id for token_id in seq] for seq in labels]
         assert len(input_ids) == len(labels)
-        # with open("test.json", "w") as test_file:
-        #     json.dump({
-        #         "v_tok_q": v_tok_q,
-        #         "v_tok_c": v_tok_c,
-        #         "v_tok_a": v_tok_a,
-        #         "input_ids": input_ids.tolist(), 
-        #         "attention_mask": attention_mask.tolist(), 
-        #         "labels": labels.tolist()
-        #         }, 
-        #         test_file, 
-        #         indent=4)
-        # raise
         return {
             "input_ids": input_ids,
             "attention_mask": attention_mask,
