@@ -26,7 +26,7 @@ training_args = Seq2SeqTrainingArguments(
     evaluation_strategy="epoch",
     save_strategy="epoch",
     save_total_limit=10,
-    predict_with_generate=True,
+    # predict_with_generate=True,
     learning_rate=5e-4,
     fp16=False,
     gradient_accumulation_steps=4,
@@ -45,8 +45,8 @@ def compute_metrics_middle_fn(eval_pred):
     return compute_metrics_fn(decoded_preds, decoded_labels)
 
 
-def preprocess_logits_for_metrics(logits, labels):
-    return logits.argmax(dim=-1)
+# def preprocess_logits_for_metrics(logits, labels):
+#     return logits.argmax(dim=-1)
 
 
 # Create the trainer
@@ -58,7 +58,7 @@ trainer = Seq2SeqTrainer(
     data_collator=data_collator,
     tokenizer=tokenizer,
     compute_metrics=compute_metrics_middle_fn,
-    preprocess_logits_for_metrics=preprocess_logits_for_metrics
+    # preprocess_logits_for_metrics=preprocess_logits_for_metrics
 )
 
 # Start training
