@@ -9,8 +9,6 @@ def get_train_valid_dataset(training_args, tokenizer, model_config):
     def process_data_to_model_inputs(batch):
         # Tokenize questions and contexts
         inputs = tokenizer(batch["question"], batch["context"],
-                           padding=True,
-                           truncation=True,
                            return_tensors="pt")
         input_ids = inputs["input_ids"]
         attention_mask = inputs["attention_mask"]
@@ -18,11 +16,8 @@ def get_train_valid_dataset(training_args, tokenizer, model_config):
         # Tokenize answers and create labels
         answer_texts = [i["text"][0] for i in batch["answers"]]
         encoded_answers = tokenizer(answer_texts,
-                                    padding=True,
-                                    truncation=True,
                                     return_tensors="pt")
         labels = encoded_answers["input_ids"]
-        labels[labels == tokenizer.pad_token_id] = -100
         return {
             "input_ids": input_ids,
             "attention_mask": attention_mask,
@@ -32,13 +27,15 @@ def get_train_valid_dataset(training_args, tokenizer, model_config):
     # Apply the processing function to the datasets
     train_dataset = train_dataset.map(
         process_data_to_model_inputs,
-        batched=True,
-        batch_size=training_args.per_device_train_batch_size
     )
     valid_dataset = valid_dataset.map(
         process_data_to_model_inputs,
-        batched=True,
-        batch_size=training_args.per_device_eval_batch_size
     )
+
+    columns = ["input_ids", "labels", "attention_mask"]
+    train_dataset.set_format(type="torch", columns=columns)
+    valid_dataset.set_format(type="torch", columns=columns)
+    print("train_dataset", train_dataset[0])
+    print("valid_dataset", valid_dataset[0])
 
     return train_dataset, valid_dataset
