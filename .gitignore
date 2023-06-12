@@ -20,12 +20,15 @@ Icon
 
 # Folder
 Hubert
+train_dev_pred
 asrp
+nlg-eval
 
 # Output files
 *.txt
 *.pt
-
+hubert_*
+g_00500000
 # Files that might appear in the root of a volume
 .DocumentRevisions-V100
 .fseventsd

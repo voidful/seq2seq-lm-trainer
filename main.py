@@ -14,14 +14,14 @@ from module.eval_metric import compute_metrics_fn
 tokenizer = AutoTokenizer.from_pretrained("voidful/long-t5-encodec-tglobal-base")
 model = AutoModelForSeq2SeqLM.from_pretrained("voidful/long-t5-encodec-tglobal-base")
 
-# tokenizer = AutoTokenizer.from_pretrained("./Hubert/checkpoint-218990")
-# model = AutoModelForSeq2SeqLM.from_pretrained("./Hubert/checkpoint-218990")
+# tokenizer = AutoTokenizer.from_pretrained("./training_output/Hubert/checkpoint-65699")
+# model = AutoModelForSeq2SeqLM.from_pretrained("./training_output/Hubert/checkpoint-65699")
 
 training_args = Seq2SeqTrainingArguments(
-    output_dir="./training_output/Hubert",
+    output_dir="./training_output/anstext_Hubert",
     num_train_epochs=10,
     per_device_train_batch_size=1,
-    per_device_eval_batch_size=8,
+    per_device_eval_batch_size=6,
     warmup_steps=500,
     weight_decay=0.01,
     logging_dir="./logs",
