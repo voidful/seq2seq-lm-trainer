@@ -34,14 +34,14 @@ def get_train_valid_dataset(training_args, tokenizer, model_config):
         process_data_to_model_inputs,
         batched=True,
         batch_size=training_args.per_device_train_batch_size,
-        cache_file_name="hubert_train_anstext",
+        cache_file_name="hubert_train_OD",
         # load_from_cache_file=True
     )
     valid_dataset = valid_dataset.map(
         process_data_to_model_inputs,
         batched=True,
         batch_size=training_args.per_device_eval_batch_size,
-        cache_file_name="hubert_valid_anstext",
+        cache_file_name="hubert_valid_OD",
         # load_from_cache_file=True
     )
 
