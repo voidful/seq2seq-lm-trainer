@@ -23,6 +23,7 @@ Hubert
 train_dev_pred
 asrp
 nlg-eval
+whisper-ft
 
 # Output files
 *.txt
