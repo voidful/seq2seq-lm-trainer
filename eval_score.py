@@ -64,12 +64,12 @@ for i in range(len(dev_set)):
         dev_text_gt.append(dev_set[i]['answers']['text'][0])
 
 hubert_train_pred, hubert_train_gt, hubert_dev_pred, hubert_dev_gt = [], [], [], []
-with open(os.path.join("train_dev_pred", "hubert_train_pred.json"), "r") as f:
+with open(os.path.join("hubert_train_pred.json"), "r") as f:
     all_train = json.load(f)
     for item in all_train:
         hubert_train_pred.append(item['pred'])
         hubert_train_gt.append(item['gt'])
-with open(os.path.join("train_dev_pred", "hubert_dev_pred.json"), "r") as f:
+with open(os.path.join("hubert_dev_pred.json"), "r") as f:
     all_dev = json.load(f)
     for item in all_dev:
         hubert_dev_pred.append(item['pred'])

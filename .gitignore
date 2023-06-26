@@ -20,7 +20,7 @@ Icon
 
 # Folder
 Hubert
-train_dev_pred
+train_dev_pred*
 asrp
 nlg-eval
 whisper-ft
