@@ -11,17 +11,17 @@ from module.data_processing import get_train_valid_dataset
 from module.eval_metric import compute_metrics_fn
 
 # Load model and tokenizer and Set training parameters
-tokenizer = AutoTokenizer.from_pretrained("voidful/long-t5-encodec-tglobal-base")
-model = AutoModelForSeq2SeqLM.from_pretrained("voidful/long-t5-encodec-tglobal-base")
+tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-large")
+model = AutoModelForSeq2SeqLM.from_pretrained("google/flan-t5-large")
 
 # tokenizer = AutoTokenizer.from_pretrained("./training_output/Hubert/checkpoint-65699")
 # model = AutoModelForSeq2SeqLM.from_pretrained("./training_output/Hubert/checkpoint-65699")
 
 training_args = Seq2SeqTrainingArguments(
-    output_dir="./training_output/anstext_Hubert",
-    num_train_epochs=10,
-    per_device_train_batch_size=1,
-    per_device_eval_batch_size=6,
+    output_dir="./training_output",
+    num_train_epochs=20,
+    per_device_train_batch_size=5,
+    per_device_eval_batch_size=5,
     warmup_steps=500,
     weight_decay=0.01,
     logging_dir="./logs",
@@ -32,6 +32,8 @@ training_args = Seq2SeqTrainingArguments(
     predict_with_generate=True,
     learning_rate=5e-5,
     bf16=True,
+    save_total_limit=10,
+    learning_rate=5e-4,
     gradient_accumulation_steps=4,
 )
 # Define a data collator to handle tokenization
@@ -50,14 +52,15 @@ def compute_metrics_middle_fn(eval_pred):
 def preprocess_logits_for_metrics(logits, labels):
     return logits.argmax(dim=-1)
 
+
 # Create the trainer
 trainer = Seq2SeqTrainer(
     model=model,
     args=training_args,
     train_dataset=train_dataset,
     eval_dataset=valid_dataset,
-    data_collator=data_collator,
     tokenizer=tokenizer,
+    data_collator=data_collator,
     compute_metrics=compute_metrics_middle_fn,
     # preprocess_logits_for_metrics=preprocess_logits_for_metrics
 )

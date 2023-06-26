@@ -8,6 +8,7 @@ def get_train_valid_dataset(training_args, tokenizer, model_config):
     # Define function to process data into model inputs
     def process_data_to_model_inputs(batch):
         # Tokenize questions and contexts
+
         q, c = batch['hubert_100_question_unit'], batch['hubert_100_context_unit']
         a = batch['answers']
         a = convert_text_ans(a)
@@ -16,10 +17,12 @@ def get_train_valid_dataset(training_args, tokenizer, model_config):
                 a[i] = ""
         v_tok_q, v_tok_c = convert_vtok(q), convert_vtok(c)
         inputs = tokenizer(v_tok_q, v_tok_c, padding=True, truncation=True, return_tensors="pt")
+
         input_ids = inputs["input_ids"]
         attention_mask = inputs["attention_mask"]
 
         # Tokenize answers and create labels
+
         labels = tokenizer(a, padding=True, truncation=True, return_tensors="pt").input_ids
         labels = [[-100 if token_id == tokenizer.pad_token_id else token_id for token_id in seq] for seq in labels]
         assert len(input_ids) == len(labels)
@@ -44,6 +47,18 @@ def get_train_valid_dataset(training_args, tokenizer, model_config):
         cache_file_name="hubert_valid_OD",
         # load_from_cache_file=True
     )
+    train_dataset = train_dataset.map(
+        process_data_to_model_inputs
+    )
+    valid_dataset = valid_dataset.map(
+        process_data_to_model_inputs
+    )
+
+    columns = ["input_ids", "labels", "attention_mask"]
+    train_dataset.set_format(type="torch", columns=columns)
+    valid_dataset.set_format(type="torch", columns=columns)
+    print("train_dataset", train_dataset[0])
+    print("valid_dataset", valid_dataset[0])
 
     return train_dataset, valid_dataset
 
