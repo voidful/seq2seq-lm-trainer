@@ -24,7 +24,7 @@ train_dev_pred*
 asrp
 nlg-eval
 whisper-ft
-
+asr-trainer
 # Output files
 *.txt
 *.pt

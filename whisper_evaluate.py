@@ -6,8 +6,8 @@ from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 from transformers import WhisperProcessor, WhisperForConditionalGeneration
 
 # load model and processor
-whisper_processor = WhisperProcessor.from_pretrained("openai/whisper-large-v2")
-whisper_model = WhisperForConditionalGeneration.from_pretrained("openai/whisper-large-v2").to('cuda')
+whisper_processor = WhisperProcessor.from_pretrained("openai/whisper-small")
+whisper_model = WhisperForConditionalGeneration.from_pretrained("Oscarshih/Whisper-small-NMSQA").to('cuda')
 whisper_model.config.forced_decoder_ids = None
 
 tokenizer = AutoTokenizer.from_pretrained("Oscarshih/long-t5-base-SQA-15ep")

@@ -16,13 +16,28 @@ with open("NMSQA-dev.csv", "w") as f:
 for data in tqdm(train_set):
     try:
         audio_data = data['content_segment_audio_path']['array']
-        audio = ipd.Audio(data=audio_data, autoplay=False, rate=24000)
+        audio = ipd.Audio(data=audio_data, autoplay=False, rate=22050)
     except:
         continue
-    gt_text = data['content_segment_normalized_text']
+    gt_text = data['content_segment_normalized_text'].replace('"', "'")
     ids = data['id']
     file_name = ids + '.wav'
     with open(os.path.join(train_dir, file_name), "wb") as f:
         f.write(audio.data)
     with open("NMSQA-train.csv", "a") as f:
         f.writelines(os.path.join(train_dir, file_name) + ',"' + gt_text + '"\n')
+
+
+for data in tqdm(dev_set):
+    try:
+        audio_data = data['content_segment_audio_path']['array']
+        audio = ipd.Audio(data=audio_data, autoplay=False, rate=22050)
+    except:
+        continue
+    gt_text = data['content_segment_normalized_text'].replace('"', "'")
+    ids = data['id']
+    file_name = ids + '.wav'
+    with open(os.path.join(dev_dir, file_name), "wb") as f:
+        f.write(audio.data)
+    with open("NMSQA-dev.csv", "a") as f:
+        f.writelines(os.path.join(dev_dir, file_name) + ',"' + gt_text + '"\n')
