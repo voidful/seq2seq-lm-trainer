@@ -1,3 +1,6 @@
+import json
+
+
 def get_train_valid_dataset(training_args, tokenizer, model_config):
     # Load dataset
     from datasets import load_dataset
@@ -16,15 +19,18 @@ def get_train_valid_dataset(training_args, tokenizer, model_config):
             if q[i] == "" and c[i] == "":
                 a[i] = ""
         v_tok_q, v_tok_c = convert_vtok(q), convert_vtok(c)
-        inputs = tokenizer(v_tok_q, v_tok_c, padding=True, truncation=True, return_tensors="pt")
+        inputs = tokenizer(v_tok_q, v_tok_c, padding=True,
+                           truncation=True, return_tensors="pt")
 
         input_ids = inputs["input_ids"]
         attention_mask = inputs["attention_mask"]
 
         # Tokenize answers and create labels
 
-        labels = tokenizer(a, padding=True, truncation=True, return_tensors="pt").input_ids
-        labels = [[-100 if token_id == tokenizer.pad_token_id else token_id for token_id in seq] for seq in labels]
+        labels = tokenizer(a, padding=True, truncation=True,
+                           return_tensors="pt").input_ids
+        labels = [[-100 if token_id == tokenizer.pad_token_id else token_id for token_id in seq]
+                  for seq in labels]
         assert len(input_ids) == len(labels)
         return {
             "input_ids": input_ids,
@@ -62,8 +68,10 @@ def get_train_valid_dataset(training_args, tokenizer, model_config):
 
     return train_dataset, valid_dataset
 
-import json
-# Check the mismatch between (question, context) and (answer). 
+
+# Check the mismatch between (question, context) and (answer).
+
+
 def convert_vtok(unit_code):
     for i in range(len(unit_code)):
         try:
@@ -71,8 +79,9 @@ def convert_vtok(unit_code):
         except:
             continue
         v_tok = [f"v_tok_{unit}" for unit in code]
-        unit_code[i] = ' '.join(v_tok) # blank is not needed
+        unit_code[i] = ' '.join(v_tok)  # blank is not needed
     return unit_code
+
 
 def convert_text_ans(ans):
     for i in range(len(ans)):

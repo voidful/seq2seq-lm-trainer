@@ -2,23 +2,25 @@ from datasets import load_dataset
 import json
 import os
 
+
 def normalize_text(s):
-    import string, re
+    import string
+    import re
 
     def remove_articles(text):
         regex = re.compile(r"\b(a|an|the)\b", re.UNICODE)
         return re.sub(regex, " ", text)
-    
+
     def white_space_fix(text):
         return " ".join(text.split())
-    
+
     def remove_punc(text):
         exclude = set(string.punctuation)
         return "".join(ch for ch in text if ch not in exclude)
-    
+
     def lower(text):
         return text.lower()
-    
+
     return white_space_fix(remove_articles(remove_punc(lower(s))))
 
 
@@ -31,6 +33,7 @@ def exact_match(pred, gt):
     for i in range(len(pred)):
         correct += (pred[i] == gt[i])
     return 100 * correct / len(pred)
+
 
 def compute_f1_score(pred, gt):
     f1 = 0
@@ -48,6 +51,7 @@ def compute_f1_score(pred, gt):
         rec = len(common_token) / len(gt[i])
         f1 += 2 * prec * rec / (prec + rec)
     return 100 * f1 / len(pred)
+
 
 dataset = load_dataset("voidful/NMSQA-CODE")
 train_set, dev_set = dataset['train'], dataset['dev']
@@ -77,22 +81,30 @@ with open(os.path.join("hubert_dev_pred.json"), "r") as f:
 
 
 print("HuBERT Unit EM on dev set: ", exact_match(hubert_dev_pred, hubert_dev_gt))
-print("HuBERT Unit EM on train set: ", exact_match(hubert_train_pred, hubert_train_gt))
+print("HuBERT Unit EM on train set: ", exact_match(
+    hubert_train_pred, hubert_train_gt))
 
 print("HuBERT Text EM on dev set: ", exact_match(hubert_dev_pred, dev_text_gt))
-print("HuBERT Text EM on train set: ", exact_match(hubert_train_pred, train_text_gt))
+print("HuBERT Text EM on train set: ", exact_match(
+    hubert_train_pred, train_text_gt))
 
 print("HuBERT GT EM on dev set: ", exact_match(hubert_dev_gt, dev_text_gt))
 print("HuBERT GT EM on train set: ", exact_match(hubert_train_gt, train_text_gt))
 
-print("HuBERT Unit F1-score on dev set: ", compute_f1_score(hubert_dev_pred, hubert_dev_gt))
-print("HuBERT Unit F1-score on train set: ", compute_f1_score(hubert_train_pred, hubert_train_gt))
+print("HuBERT Unit F1-score on dev set: ",
+      compute_f1_score(hubert_dev_pred, hubert_dev_gt))
+print("HuBERT Unit F1-score on train set: ",
+      compute_f1_score(hubert_train_pred, hubert_train_gt))
 
-print("HuBERT Text F1-score on dev set: ", compute_f1_score(hubert_dev_pred, dev_text_gt))
-print("HuBERT Text F1-score on train set: ", compute_f1_score(hubert_train_pred, train_text_gt))
+print("HuBERT Text F1-score on dev set: ",
+      compute_f1_score(hubert_dev_pred, dev_text_gt))
+print("HuBERT Text F1-score on train set: ",
+      compute_f1_score(hubert_train_pred, train_text_gt))
 
-print("HuBERT GT F1-score on dev set: ", compute_f1_score(hubert_dev_gt, dev_text_gt))
-print("HuBERT GT F1-score on train set: ", compute_f1_score(hubert_train_gt, train_text_gt))
+print("HuBERT GT F1-score on dev set: ",
+      compute_f1_score(hubert_dev_gt, dev_text_gt))
+print("HuBERT GT F1-score on train set: ",
+      compute_f1_score(hubert_train_gt, train_text_gt))
 
 # mhubert_train_pred, mhubert_train_gt, mhubert_dev_pred, mhubert_dev_gt = [], [], [], []
 # with open(os.path.join("train_dev_pred", "mhubert_train_pred.json"), "r") as f:

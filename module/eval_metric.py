@@ -64,12 +64,13 @@ def wer_cal(groundtruth, hypothesis):
     return err / tot
 
 
-nlgeval = NLGEval(no_skipthoughts=True, no_glove=True, metrics_to_omit=["METEOR", "CIDEr"])
+nlgeval = NLGEval(no_skipthoughts=True, no_glove=True,
+                  metrics_to_omit=["METEOR", "CIDEr"])
 
 
 def compute_metrics_fn(predictions, labels):
     result_dict = {}
-    
+
     with open("output.txt", "w") as f:
         print("pred_result", file=f)
         print("=================================", file=f)
