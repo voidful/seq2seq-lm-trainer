@@ -1,10 +1,6 @@
-from transformers import (
-    AutoTokenizer,
-    AutoModelForSeq2SeqLM,
-    DataCollatorForSeq2Seq,
-    Seq2SeqTrainer,
-    Seq2SeqTrainingArguments,
-)
+from transformers import (AutoModelForSeq2SeqLM, AutoTokenizer,
+                          DataCollatorForSeq2Seq, Seq2SeqTrainer,
+                          Seq2SeqTrainingArguments)
 
 access_token = "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"
 tokenizer = AutoTokenizer.from_pretrained("./training_output/Hubert/checkpoint-218990")

@@ -1,11 +1,12 @@
-from datasets import load_dataset
 import json
 import os
 
+from datasets import load_dataset
+
 
 def normalize_text(s):
-    import string
     import re
+    import string
 
     def remove_articles(text):
         regex = re.compile(r"\b(a|an|the)\b", re.UNICODE)

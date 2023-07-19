@@ -1,9 +1,10 @@
 import json
+
 from asrp.code2voice_model.hubert import hifigan_hubert_layer6_code100
 from asrp.code2voice_model.mhubert import hifigan_mhubert_en_layer11_code1000
 from datasets import load_dataset
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
-from transformers import WhisperProcessor, WhisperForConditionalGeneration
+from transformers import (AutoModelForSeq2SeqLM, AutoTokenizer,
+                          WhisperForConditionalGeneration, WhisperProcessor)
 
 # load model and processor
 whisper_processor = WhisperProcessor.from_pretrained("openai/whisper-small")
