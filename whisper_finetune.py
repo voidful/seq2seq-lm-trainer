@@ -33,54 +33,54 @@ def prepare_dataset(batch):
     # load and resample audio data from 48 to 16kHz
     audio = batch["content_segment_audio_path"]
     batch["input_features"] = feature_extractor(
-        audio["array"], sampling_rate=audio["sampling_rate"]
-    ).input_features[0]
+        audio["array"], sampling_rate=audio["sampling_rate"]).input_features[0]
     batch["input_length"] = len(audio)
     batch["labels"] = tokenizer(
-        batch["content_segment_normalized_text"],
-    ).input_ids
+        batch["content_segment_normalized_text"], ).input_ids
     batch["labels_length"] = len(batch["labels"])
     return batch
 
 
 dataset = load_dataset("voidful/NMSQA_audio")
-dataset = dataset.remove_columns(
-    [
-        "id",
-        "title",
-        "context",
-        "content_audio_sampling_rate",
-        "content_segment_text",
-        "question",
-        "answers",
-        "content_full_audio_path",
-        "content_audio_speaker",
-        "question_audio_path",
-        "question_audio_sampling_rate",
-        "question_audio_speaker",
-        "question_normalized_text",
-    ]
-)
-dataset = dataset.cast_column("content_segment_audio_path", Audio(sampling_rate=16000))
+dataset = dataset.remove_columns([
+    "id",
+    "title",
+    "context",
+    "content_audio_sampling_rate",
+    "content_segment_text",
+    "question",
+    "answers",
+    "content_full_audio_path",
+    "content_audio_speaker",
+    "question_audio_path",
+    "question_audio_sampling_rate",
+    "question_audio_speaker",
+    "question_normalized_text",
+])
+dataset = dataset.cast_column("content_segment_audio_path",
+                              Audio(sampling_rate=16000))
 print(dataset)
 processor = WhisperProcessor.from_pretrained("openai/whisper-small.en")
-feature_extractor = WhisperFeatureExtractor.from_pretrained("openai/whisper-small.en")
+feature_extractor = WhisperFeatureExtractor.from_pretrained(
+    "openai/whisper-small.en")
 tokenizer = WhisperTokenizer.from_pretrained("openai/whisper-small.en")
 filtered_dataset = dataset.filter(
-    lambda example: example["content_segment_audio_path"] is not None
-)
+    lambda example: example["content_segment_audio_path"] is not None)
 print(filtered_dataset)
 filtered_dataset = filtered_dataset.map(
     prepare_dataset,
     writer_batch_size=2048,
     batch_size=32,
     load_from_cache_file=True,
-    cache_file_names={"train": "nmsqa-train", "dev": "nmsqa-dev", "test": ""},
+    cache_file_names={
+        "train": "nmsqa-train",
+        "dev": "nmsqa-dev",
+        "test": ""
+    },
 )
 
 filtered_dataset = filtered_dataset.filter(
-    filter_data, input_columns=["input_length", "labels_length"]
-)
+    filter_data, input_columns=["input_length", "labels_length"])
 print(filtered_dataset)
 
 
@@ -93,26 +93,28 @@ class DataCollatorSpeechSeq2SeqWithPadding:
     ) -> Dict[str, torch.Tensor]:
         # split inputs and labels since they have to be of different lengths and need different padding methods
         # first treat the audio inputs by simply returning torch tensors
-        input_features = [
-            {"input_features": feature["input_features"]} for feature in features
-        ]
-        batch = self.processor.feature_extractor.pad(
-            input_features, return_tensors="pt"
-        )
+        input_features = [{
+            "input_features": feature["input_features"]
+        } for feature in features]
+        batch = self.processor.feature_extractor.pad(input_features,
+                                                     return_tensors="pt")
 
         # get the tokenized label sequences
-        label_features = [{"input_ids": feature["labels"]} for feature in features]
+        label_features = [{
+            "input_ids": feature["labels"]
+        } for feature in features]
         # pad the labels to max length
-        labels_batch = self.processor.tokenizer.pad(label_features, return_tensors="pt")
+        labels_batch = self.processor.tokenizer.pad(label_features,
+                                                    return_tensors="pt")
 
         # replace padding with -100 to ignore loss correctly
         labels = labels_batch["input_ids"].masked_fill(
-            labels_batch.attention_mask.ne(1), -100
-        )
+            labels_batch.attention_mask.ne(1), -100)
 
         # if bos token is appended in previous tokenization step,
         # cut bos token here as it's append later anyways
-        if (labels[:, 0] == self.processor.tokenizer.bos_token_id).all().cpu().item():
+        if (labels[:, 0] == self.processor.tokenizer.bos_token_id
+            ).all().cpu().item():
             labels = labels[:, 1:]
 
         batch["labels"] = labels
@@ -149,7 +151,8 @@ training_args = Seq2SeqTrainingArguments(
     num_train_epochs=3,
     per_device_train_batch_size=4,
     per_device_eval_batch_size=4,
-    gradient_accumulation_steps=8,  # increase by 2x for every 2x decrease in batch size
+    gradient_accumulation_steps=
+    8,  # increase by 2x for every 2x decrease in batch size
     learning_rate=3e-5,
     warmup_steps=500,
     fp16=True,

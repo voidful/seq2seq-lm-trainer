@@ -18,6 +18,7 @@ ModelMap = {
 
 
 class NpEncoder(json.JSONEncoder):
+
     def default(self, obj):
         if isinstance(obj, np.integer):
             return int(obj)
@@ -30,13 +31,15 @@ class NpEncoder(json.JSONEncoder):
 
 def parse_args(args):
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--model", choices=ModelMap.keys(), required=True, help="model name"
-    )
+    parser.add_argument("--model",
+                        choices=ModelMap.keys(),
+                        required=True,
+                        help="model name")
     input_arg, model_arg = parser.parse_known_args(args)
     input_arg = {k: v for k, v in vars(input_arg).items() if v is not None}
     model_arg = {
-        k.replace("--", ""): v for k, v in zip(model_arg[:-1:2], model_arg[1::2])
+        k.replace("--", ""): v
+        for k, v in zip(model_arg[:-1:2], model_arg[1::2])
     }
     return input_arg, model_arg
 
@@ -62,16 +65,14 @@ def convert_code_fn(batch_data, hc_model, data_set=""):
     else:
         return batch_data
 
-    if (
-        context_audio is not None
-        and "audio_full_answer_start" in batch_data["answers"]
-        and "audio_full_answer_end" in batch_data["answers"]
-    ):
+    if (context_audio is not None
+            and "audio_full_answer_start" in batch_data["answers"]
+            and "audio_full_answer_end" in batch_data["answers"]):
         answer_start = batch_data["answers"]["audio_full_answer_start"][0]
         answer_end = batch_data["answers"]["audio_full_answer_end"][0]
         # Need to be lower.
-        if len(context_audio[answer_start * 1000 : answer_end * 1000]) > 1000:
-            answer_audio = context_audio[answer_start * 1000 : answer_end * 1000]
+        if len(context_audio[answer_start * 1000:answer_end * 1000]) > 1000:
+            answer_audio = context_audio[answer_start * 1000:answer_end * 1000]
         else:
             return batch_data
     else:
@@ -79,8 +80,7 @@ def convert_code_fn(batch_data, hc_model, data_set=""):
 
     context_units = hc_model(
         input_values=torch.from_numpy(
-            np.array(context_audio.get_array_of_samples(), dtype=np.float32)
-        ),
+            np.array(context_audio.get_array_of_samples(), dtype=np.float32)),
         feat_norm=False,
         beamsearch=False,
         top_k=100,
@@ -88,8 +88,7 @@ def convert_code_fn(batch_data, hc_model, data_set=""):
     )
     question_units = hc_model(
         input_values=torch.from_numpy(
-            np.array(question_audio.get_array_of_samples(), dtype=np.float32)
-        ),
+            np.array(question_audio.get_array_of_samples(), dtype=np.float32)),
         feat_norm=False,
         beamsearch=False,
         top_k=100,
@@ -97,8 +96,7 @@ def convert_code_fn(batch_data, hc_model, data_set=""):
     )
     answer_units = hc_model(
         input_values=torch.from_numpy(
-            np.array(answer_audio.get_array_of_samples(), dtype=np.float32)
-        ),
+            np.array(answer_audio.get_array_of_samples(), dtype=np.float32)),
         feat_norm=False,
         beamsearch=False,
         top_k=100,
@@ -106,34 +104,47 @@ def convert_code_fn(batch_data, hc_model, data_set=""):
     )
 
     if context_units is not None:
-        batch_data.update({"context_unit": json.dumps(context_units, cls=NpEncoder)})
+        batch_data.update(
+            {"context_unit": json.dumps(context_units, cls=NpEncoder)})
 
     if question_units is not None:
-        batch_data.update({"question_unit": json.dumps(question_units, cls=NpEncoder)})
+        batch_data.update(
+            {"question_unit": json.dumps(question_units, cls=NpEncoder)})
 
     if answer_units is not None:
-        batch_data.update({"answer_unit": json.dumps(answer_units, cls=NpEncoder)})
+        batch_data.update(
+            {"answer_unit": json.dumps(answer_units, cls=NpEncoder)})
     return batch_data
 
 
 def main(arg=None):
-    input_arg, model_arg = parse_args(sys.argv[1:]) if arg is None else parse_args(arg)
+    input_arg, model_arg = parse_args(
+        sys.argv[1:]) if arg is None else parse_args(arg)
 
     hc_model = ModelMap[input_arg["model"]]()
     dataset["test"] = dataset["test"].map(
         convert_code_fn,
         batched=False,
-        fn_kwargs={"data_set": "test", "hc_model": hc_model},
+        fn_kwargs={
+            "data_set": "test",
+            "hc_model": hc_model
+        },
     )
     dataset["dev"] = dataset["dev"].map(
         convert_code_fn,
         batched=False,
-        fn_kwargs={"data_set": "dev", "hc_model": hc_model},
+        fn_kwargs={
+            "data_set": "dev",
+            "hc_model": hc_model
+        },
     )
     dataset["train"] = dataset["train"].map(
         convert_code_fn,
         batched=False,
-        fn_kwargs={"data_set": "train", "hc_model": hc_model},
+        fn_kwargs={
+            "data_set": "train",
+            "hc_model": hc_model
+        },
     )
     dataset.save_to_disk(f"GSQA-{input_arg['model']}")
 

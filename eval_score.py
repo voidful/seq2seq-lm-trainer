@@ -80,15 +80,18 @@ with open(os.path.join("hubert_dev_pred.json"), "r") as f:
         hubert_dev_pred.append(item["pred"])
         hubert_dev_gt.append(item["gt"])
 
-
-print("HuBERT Unit EM on dev set: ", exact_match(hubert_dev_pred, hubert_dev_gt))
-print("HuBERT Unit EM on train set: ", exact_match(hubert_train_pred, hubert_train_gt))
+print("HuBERT Unit EM on dev set: ", exact_match(hubert_dev_pred,
+                                                 hubert_dev_gt))
+print("HuBERT Unit EM on train set: ",
+      exact_match(hubert_train_pred, hubert_train_gt))
 
 print("HuBERT Text EM on dev set: ", exact_match(hubert_dev_pred, dev_text_gt))
-print("HuBERT Text EM on train set: ", exact_match(hubert_train_pred, train_text_gt))
+print("HuBERT Text EM on train set: ",
+      exact_match(hubert_train_pred, train_text_gt))
 
 print("HuBERT GT EM on dev set: ", exact_match(hubert_dev_gt, dev_text_gt))
-print("HuBERT GT EM on train set: ", exact_match(hubert_train_gt, train_text_gt))
+print("HuBERT GT EM on train set: ", exact_match(hubert_train_gt,
+                                                 train_text_gt))
 
 print(
     "HuBERT Unit F1-score on dev set: ",
@@ -99,15 +102,15 @@ print(
     compute_f1_score(hubert_train_pred, hubert_train_gt),
 )
 
-print(
-    "HuBERT Text F1-score on dev set: ", compute_f1_score(hubert_dev_pred, dev_text_gt)
-)
+print("HuBERT Text F1-score on dev set: ",
+      compute_f1_score(hubert_dev_pred, dev_text_gt))
 print(
     "HuBERT Text F1-score on train set: ",
     compute_f1_score(hubert_train_pred, train_text_gt),
 )
 
-print("HuBERT GT F1-score on dev set: ", compute_f1_score(hubert_dev_gt, dev_text_gt))
+print("HuBERT GT F1-score on dev set: ",
+      compute_f1_score(hubert_dev_gt, dev_text_gt))
 print(
     "HuBERT GT F1-score on train set: ",
     compute_f1_score(hubert_train_gt, train_text_gt),

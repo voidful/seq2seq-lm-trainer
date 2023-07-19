@@ -64,9 +64,9 @@ def wer_cal(groundtruth, hypothesis):
     return err / tot
 
 
-nlgeval = NLGEval(
-    no_skipthoughts=True, no_glove=True, metrics_to_omit=["METEOR", "CIDEr"]
-)
+nlgeval = NLGEval(no_skipthoughts=True,
+                  no_glove=True,
+                  metrics_to_omit=["METEOR", "CIDEr"])
 
 
 def compute_metrics_fn(predictions, labels):
@@ -85,12 +85,10 @@ def compute_metrics_fn(predictions, labels):
     em_list = []
     f1_list = []
     for target, predict in zip(labels, predictions):
-        if (
-            len(str(predict)) > 0
-            and _normalize_answer(str(predict)) == _normalize_answer(str(target))
-            and len(_normalize_answer(str(predict))) > 0
-            or len(str(predict)) == len(str(target)) == 0
-        ):
+        if (len(str(predict)) > 0
+                and _normalize_answer(str(predict)) == _normalize_answer(
+                    str(target)) and len(_normalize_answer(str(predict))) > 0
+                or len(str(predict)) == len(str(target)) == 0):
             em_score = 1
             f1_score = 1
         else:

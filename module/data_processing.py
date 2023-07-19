@@ -13,32 +13,33 @@ def get_train_valid_dataset(training_args, tokenizer, model_config):
     def process_data_to_model_inputs(batch):
         # Tokenize questions and contexts
 
-        q, c = batch["hubert_100_question_unit"], batch["hubert_100_context_unit"]
+        q, c = batch["hubert_100_question_unit"], batch[
+            "hubert_100_context_unit"]
         a = batch["answers"]
         a = convert_text_ans(a)
         for i in range(len(q)):
             if q[i] == "" and c[i] == "":
                 a[i] = ""
         v_tok_q, v_tok_c = convert_vtok(q), convert_vtok(c)
-        inputs = tokenizer(
-            v_tok_q, v_tok_c, padding=True, truncation=True, return_tensors="pt"
-        )
+        inputs = tokenizer(v_tok_q,
+                           v_tok_c,
+                           padding=True,
+                           truncation=True,
+                           return_tensors="pt")
 
         input_ids = inputs["input_ids"]
         attention_mask = inputs["attention_mask"]
 
         # Tokenize answers and create labels
 
-        labels = tokenizer(
-            a, padding=True, truncation=True, return_tensors="pt"
-        ).input_ids
-        labels = [
-            [
-                -100 if token_id == tokenizer.pad_token_id else token_id
-                for token_id in seq
-            ]
-            for seq in labels
-        ]
+        labels = tokenizer(a,
+                           padding=True,
+                           truncation=True,
+                           return_tensors="pt").input_ids
+        labels = [[
+            -100 if token_id == tokenizer.pad_token_id else token_id
+            for token_id in seq
+        ] for seq in labels]
         assert len(input_ids) == len(labels)
         return {
             "input_ids": input_ids,

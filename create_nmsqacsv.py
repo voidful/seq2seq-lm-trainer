@@ -26,8 +26,8 @@ for data in tqdm(train_set):
     with open(os.path.join(train_dir, file_name), "wb") as f:
         f.write(audio.data)
     with open("NMSQA-train.csv", "a") as f:
-        f.writelines(os.path.join(train_dir, file_name) + ',"' + gt_text + '"\n')
-
+        f.writelines(
+            os.path.join(train_dir, file_name) + ',"' + gt_text + '"\n')
 
 for data in tqdm(dev_set):
     try:
