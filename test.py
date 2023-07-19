@@ -1,11 +1,7 @@
 # from transformers import AutoTokenizer
-
 # tokenizer = AutoTokenizer.from_pretrained("voidful/long-t5-encodec-tglobal-base")
-
 # input = "v_tok_71 v_tok_36 v_tok_49 v_tok_7 v_tok_87"
 # print(tokenizer(input, truncation=True, padding=True, return_tensors="pt"))
-
-
 from nlgeval import NLGEval
 
 

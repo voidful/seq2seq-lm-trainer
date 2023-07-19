@@ -1,8 +1,10 @@
 import math
 
-from transformers import (AutoModelForSeq2SeqLM, AutoTokenizer,
-                          DataCollatorForSeq2Seq, Seq2SeqTrainer,
-                          Seq2SeqTrainingArguments)
+from transformers import AutoModelForSeq2SeqLM
+from transformers import AutoTokenizer
+from transformers import DataCollatorForSeq2Seq
+from transformers import Seq2SeqTrainer
+from transformers import Seq2SeqTrainingArguments
 
 from module.data_processing import get_train_valid_dataset
 from module.eval_metric import compute_metrics_fn

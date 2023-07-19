@@ -2,8 +2,10 @@ import json
 import math
 
 import numpy as np
-from transformers import (AutoModelForCausalLM, AutoTokenizer, Trainer,
-                          TrainingArguments)
+from transformers import AutoModelForCausalLM
+from transformers import AutoTokenizer
+from transformers import Trainer
+from transformers import TrainingArguments
 
 from module.data_processing import get_train_valid_dataset
 from module.eval_metric import compute_metrics_fn

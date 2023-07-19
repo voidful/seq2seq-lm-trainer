@@ -1,15 +1,22 @@
 import csv
 from dataclasses import dataclass
-from typing import Any, Dict, List, Union
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Union
 
 import evaluate
 import numpy as np
 import torch
-from datasets import Audio, DatasetDict, load_dataset
-from transformers import (Seq2SeqTrainer, Seq2SeqTrainingArguments,
-                          WhisperFeatureExtractor,
-                          WhisperForConditionalGeneration, WhisperProcessor,
-                          WhisperTokenizer)
+from datasets import Audio
+from datasets import DatasetDict
+from datasets import load_dataset
+from transformers import Seq2SeqTrainer
+from transformers import Seq2SeqTrainingArguments
+from transformers import WhisperFeatureExtractor
+from transformers import WhisperForConditionalGeneration
+from transformers import WhisperProcessor
+from transformers import WhisperTokenizer
 
 MAX_DURATION_IN_SECONDS = 30.0
 max_input_length = MAX_DURATION_IN_SECONDS * 16000
