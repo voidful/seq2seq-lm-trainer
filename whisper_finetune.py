@@ -37,15 +37,17 @@ dataset = dataset.remove_columns([
 ])
 dataset = dataset.cast_column("content_segment_audio_path", Audio(sampling_rate=16000))
 print(dataset)
-processor = WhisperProcessor.from_pretrained("openai/whisper-small", language="English", task="transcribe")
-feature_extractor = WhisperFeatureExtractor.from_pretrained("openai/whisper-small")
-tokenizer = WhisperTokenizer.from_pretrained("openai/whisper-small", language="English", task="transcribe")
+processor = WhisperProcessor.from_pretrained("openai/whisper-small.en")
+feature_extractor = WhisperFeatureExtractor.from_pretrained("openai/whisper-small.en")
+tokenizer = WhisperTokenizer.from_pretrained("openai/whisper-small.en")
 filtered_dataset = dataset.filter(lambda example: example["content_segment_audio_path"] is not None)
 print(filtered_dataset)
 filtered_dataset = filtered_dataset.map(
     prepare_dataset,
     writer_batch_size=2048,
-    batch_size=32
+    batch_size=32,
+    load_from_cache_file=True,
+    cache_file_names={"train":"nmsqa-train", "dev":"nmsqa-dev", "test":""}
 )
 
 filtered_dataset = filtered_dataset.filter(

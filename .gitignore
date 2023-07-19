@@ -25,9 +25,12 @@ asrp
 nlg-eval
 whisper-ft
 asr-trainer
+wandb
 # Output files
 *.txt
 *.pt
+*.arrow
+nmsqa-*
 hubert_*
 g_00500000
 # Files that might appear in the root of a volume
