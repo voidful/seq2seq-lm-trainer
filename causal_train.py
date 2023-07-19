@@ -1,9 +1,4 @@
-from transformers import (
-    AutoModelForCausalLM,
-    Trainer,
-    TrainingArguments,
-    AutoTokenizer
-)
+from transformers import AutoModelForCausalLM, Trainer, TrainingArguments, AutoTokenizer
 from module.data_processing import get_train_valid_dataset
 from module.eval_metric import compute_metrics_fn
 import json
@@ -11,10 +6,8 @@ import numpy as np
 import math
 
 # Load model and tokenizer and Set training parameters
-model = AutoModelForCausalLM.from_pretrained(
-    "voidful/stablelm-tuned-alpha-3b-unit")
-tokenizer = AutoTokenizer.from_pretrained(
-    "voidful/stablelm-tuned-alpha-3b-unit")
+model = AutoModelForCausalLM.from_pretrained("voidful/stablelm-tuned-alpha-3b-unit")
+tokenizer = AutoTokenizer.from_pretrained("voidful/stablelm-tuned-alpha-3b-unit")
 
 training_args = TrainingArguments(
     output_dir="./training_output/stablelm-tuned-alpha-3b-unit",
@@ -35,7 +28,8 @@ training_args = TrainingArguments(
 
 # Load dataset
 train_dataset, valid_dataset = get_train_valid_dataset(
-    training_args, tokenizer, model.config)
+    training_args, tokenizer, model.config
+)
 # Initialize Trainer
 trainer = Trainer(
     model=model,

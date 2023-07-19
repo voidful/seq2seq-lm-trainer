@@ -12,16 +12,16 @@ def _normalize_answer(s):
 
     def remove_articles(text):
         if len(text) > 1:
-            return re.sub(r'\b(a|an|the)\b', ' ', text)
+            return re.sub(r"\b(a|an|the)\b", " ", text)
         else:
             return text
 
     def white_space_fix(text):
-        return ' '.join(text.split())
+        return " ".join(text.split())
 
     def remove_punc(text):
         exclude = set(string.punctuation)
-        return ''.join(ch for ch in text if ch not in exclude)
+        return "".join(ch for ch in text if ch not in exclude)
 
     def lower(text):
         return text.lower()
@@ -57,15 +57,16 @@ def wer_cal(groundtruth, hypothesis):
     err = 0
     tot = 0
     for p, t in zip(hypothesis, groundtruth):
-        p = p.lower().split(' ')
-        t = t.lower().split(' ')
+        p = p.lower().split(" ")
+        t = t.lower().split(" ")
         err += float(ed.eval(p, t))
         tot += len(t)
     return err / tot
 
 
-nlgeval = NLGEval(no_skipthoughts=True, no_glove=True,
-                  metrics_to_omit=["METEOR", "CIDEr"])
+nlgeval = NLGEval(
+    no_skipthoughts=True, no_glove=True, metrics_to_omit=["METEOR", "CIDEr"]
+)
 
 
 def compute_metrics_fn(predictions, labels):
@@ -84,9 +85,12 @@ def compute_metrics_fn(predictions, labels):
     em_list = []
     f1_list = []
     for target, predict in zip(labels, predictions):
-        if len(str(predict)) > 0 and \
-                _normalize_answer(str(predict)) == _normalize_answer(str(target)) and \
-                len(_normalize_answer(str(predict))) > 0 or len(str(predict)) == len(str(target)) == 0:
+        if (
+            len(str(predict)) > 0
+            and _normalize_answer(str(predict)) == _normalize_answer(str(target))
+            and len(_normalize_answer(str(predict))) > 0
+            or len(str(predict)) == len(str(target)) == 0
+        ):
             em_score = 1
             f1_score = 1
         else:

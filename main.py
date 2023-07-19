@@ -4,7 +4,7 @@ from transformers import (
     AutoModelForSeq2SeqLM,
     DataCollatorForSeq2Seq,
     Seq2SeqTrainer,
-    Seq2SeqTrainingArguments
+    Seq2SeqTrainingArguments,
 )
 
 from module.data_processing import get_train_valid_dataset
@@ -40,14 +40,14 @@ training_args = Seq2SeqTrainingArguments(
 data_collator = DataCollatorForSeq2Seq(tokenizer, model=model)
 # Load dataset
 train_dataset, valid_dataset = get_train_valid_dataset(
-    training_args, tokenizer, model.config)
+    training_args, tokenizer, model.config
+)
 
 
 def compute_metrics_middle_fn(eval_pred):
     predictions, labels = eval_pred
     labels = [i[i != -100] for i in labels]
-    decoded_preds = tokenizer.batch_decode(
-        predictions, skip_special_tokens=True)
+    decoded_preds = tokenizer.batch_decode(predictions, skip_special_tokens=True)
     decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
     return compute_metrics_fn(decoded_preds, decoded_labels)
 
