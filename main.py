@@ -28,6 +28,7 @@ training_args = Seq2SeqTrainingArguments(
     save_total_limit=10,
     learning_rate=5e-4,
     gradient_accumulation_steps=4,
+    eval_accumulation_steps=4,
 )
 # Define a data collator to handle tokenization
 data_collator = DataCollatorForSeq2Seq(tokenizer, model=model)
@@ -37,6 +38,7 @@ train_dataset, valid_dataset = get_train_valid_dataset(training_args, tokenizer,
 
 def compute_metrics_middle_fn(eval_pred):
     predictions, labels = eval_pred
+    predictions = [i[i != -100] for i in predictions]
     labels = [i[i != -100] for i in labels]
     decoded_preds = tokenizer.batch_decode(predictions, skip_special_tokens=True)
     decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)

@@ -1,11 +1,11 @@
-# T5-seq2seq-trainer
+# seq2seq-lm-trainer
 
-This is a simple example of using the T5 model for sequence-to-sequence tasks, leveraging Hugging Face's `Trainer` for efficient model training.   
+This is a simple example of seq2seq lm training, leveraging Hugging Face's `Trainer` for efficient model training.   
 The repository includes a configurable interface for dataset processing and evaluation metrics, allowing for seamless adaptation to various tasks and datasets.  
 
 ## Features
 
-- Utilize the powerful T5 model for various seq2seq tasks
+- Utilize the seq2seq lm model
 - Easy configuration for custom dataset processing and evaluation metrics
 - Integration with Hugging Face's `Trainer` for efficient training and evaluation
 
