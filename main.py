@@ -11,24 +11,34 @@ from module.data_processing import get_train_valid_dataset
 from module.eval_metric import compute_metrics_fn
 
 # Load model and tokenizer and Set training parameters
-tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-large")
-model = AutoModelForSeq2SeqLM.from_pretrained("google/flan-t5-large")
+tokenizer = AutoTokenizer.from_pretrained("voidful/long-t5-encodec-tglobal-base")
+model = AutoModelForSeq2SeqLM.from_pretrained("voidful/long-t5-encodec-tglobal-base")
 
 training_args = Seq2SeqTrainingArguments(
-    output_dir="./training_output",
+    output_dir="./training_output/text_QA",
     num_train_epochs=20,
-    per_device_train_batch_size=5,
-    per_device_eval_batch_size=5,
+    per_device_train_batch_size=4,
+    per_device_eval_batch_size=4,
     warmup_steps=500,
     weight_decay=0.01,
     logging_dir="./logs",
     logging_steps=10,
+
     evaluation_strategy="epoch",
     save_strategy="epoch",
+
+    # evaluation_strategy="steps",
+    # eval_steps — Number of update steps between two evaluations
+    # if evaluation_strategy="steps", default to the same value as logging_steps if not set.
+    # save_strategy="steps",
+    # save_steps = 400,
+
     save_total_limit=10,
     learning_rate=5e-4,
     gradient_accumulation_steps=4,
     eval_accumulation_steps=4,
+    bf16=True,
+    predict_with_generate=True,
 )
 # Define a data collator to handle tokenization
 data_collator = DataCollatorForSeq2Seq(tokenizer, model=model)
